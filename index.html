@@ -44,7 +44,10 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
       <div class="header-sub">Ingeniería Biomédica Hospitalaria · INGER-HDS</div>
     </div>
   </div>
-  <div class="header-right">Hospital del Salvador<br><span style="color:rgba(255,255,255,0.28)">SSMO — Nuevo HDS</span></div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <button onclick="openShare()" title="Compartir un enlace del HUB, completo o acotado a una especialidad médica" style="background:rgba(41,170,226,.18);border:1px solid rgba(41,170,226,.5);color:#e8f4fd;border-radius:9px;padding:9px 15px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px">🔗 Compartir</button>
+    <div class="header-right">Hospital del Salvador<br><span style="color:rgba(255,255,255,0.28)">SSMO — Nuevo HDS</span></div>
+  </div>
 </header>
 <main>
   <div class="section-label">Plataformas</div>
@@ -67,5 +70,57 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
   <span>Hospital del Salvador · Ingeniería Biomédica Hospitalaria</span>
   <span>INGER-HDS</span>
 </footer>
+
+<!-- ═══════ Compartir enlace ═══════ -->
+<div id="share-ov" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(6,12,26,.74);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(3px)">
+  <div style="background:#0f1e34;border:1px solid #29AAE2;border-radius:16px;max-width:560px;width:92%;box-shadow:0 24px 70px rgba(0,0,0,.6);overflow:hidden">
+    <div style="padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between">
+      <strong style="color:#e8f4fd;font-size:16px">🔗 Compartir enlace</strong>
+      <button onclick="document.getElementById('share-ov').style.display='none'" style="background:none;border:none;color:#94a3b8;font-size:24px;cursor:pointer;line-height:1">×</button>
+    </div>
+    <div style="padding:20px 22px">
+      <label style="display:block;font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">¿Qué querés compartir?</label>
+      <select id="share-scope" onchange="updateShare()" style="width:100%;background:#0c1a2e;border:1px solid #334155;border-radius:9px;color:#e8f4fd;padding:11px 12px;font-size:14px;margin-bottom:14px">
+        <option value="hub">Todo el HUB (todas las plataformas)</option>
+        <option value="equibox">EquiBox — Equipamiento médico (completo)</option>
+        <option value="esp">EquiBox — por especialidad médica…</option>
+      </select>
+      <div id="share-esp-wrap" style="display:none;margin-bottom:14px">
+        <label style="display:block;font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Especialidad</label>
+        <select id="share-esp" onchange="updateShare()" style="width:100%;background:#0c1a2e;border:1px solid #334155;border-radius:9px;color:#e8f4fd;padding:11px 12px;font-size:14px"></select>
+      </div>
+      <label style="display:block;font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Enlace para compartir</label>
+      <div style="display:flex;gap:8px">
+        <input id="share-link" readonly onclick="this.select()" style="flex:1;background:#0c1a2e;border:1px solid #334155;border-radius:9px;color:#a5f3fc;padding:11px 12px;font-size:13px">
+        <button id="share-copy" onclick="copyShare()" style="background:#29AAE2;border:none;color:#062033;border-radius:9px;padding:0 16px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">Copiar</button>
+      </div>
+      <p style="font-size:11.5px;color:#64748b;margin:12px 0 0;line-height:1.5">Quien abra el enlace verá solo la consulta (sin herramientas de edición). El acotado por especialidad abre EquiBox ya filtrado.</p>
+    </div>
+  </div>
+</div>
+<script>
+const SHARE_ESP=["MEDICINA FISICA Y REHABILITACION","OFTALMOLOGIA","DIALISIS","ODONTOLOGIA","ONCOLOGIA","PROCEDIMIENTOS CIRUGIA","OTORRINOLARINGOLOGIA","DERMATOLOGIA","NEUROLOGIA","POLICLINICO MEDICINA","ENDOSCOPIA","POLICLINICO CIRUGIA","TRANSPLANTE","CARDIOLOGIA","INFECTOLOGIA","MEDICINA NUCLEAR","ALIVIO DEL DOLOR","PSIQUIATRIA AMBULATORIA"];
+const _titleCase=s=>s.toLowerCase().replace(/(^|\s)\p{L}/gu,c=>c.toUpperCase());
+function openShare(){
+  const sel=document.getElementById('share-esp');
+  if(!sel.options.length){ sel.innerHTML=SHARE_ESP.map(e=>'<option value="'+e+'">'+_titleCase(e)+'</option>').join(''); }
+  document.getElementById('share-scope').value='hub';
+  updateShare(); document.getElementById('share-ov').style.display='flex';
+}
+function updateShare(){
+  const scope=document.getElementById('share-scope').value;
+  document.getElementById('share-esp-wrap').style.display = scope==='esp' ? 'block' : 'none';
+  let rel='index.html';
+  if(scope==='equibox') rel='2.EquiBox.html';
+  else if(scope==='esp') rel='2.EquiBox.html?especialidad='+encodeURIComponent(document.getElementById('share-esp').value);
+  document.getElementById('share-link').value=new URL(rel, location.href).href;
+}
+function copyShare(){
+  const inp=document.getElementById('share-link'); inp.select();
+  const done=()=>{ const b=document.getElementById('share-copy'); const t=b.textContent; b.textContent='✔ Copiado'; setTimeout(()=>b.textContent=t,1600); };
+  if(navigator.clipboard){ navigator.clipboard.writeText(inp.value).then(done,()=>{document.execCommand('copy');done();}); }
+  else { document.execCommand('copy'); done(); }
+}
+</script>
 </body>
 </html>
