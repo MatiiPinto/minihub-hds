@@ -84,6 +84,9 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
         <option value="hub">Todo el HUB (todas las plataformas)</option>
         <option value="equibox">EquiBox — Equipamiento médico (completo)</option>
         <option value="esp">EquiBox — por especialidad médica…</option>
+        <option value="quirurbox">QuirurBox — Instrumental quirúrgico (completo)</option>
+        <option value="qxesp">QuirurBox — por especialidad…</option>
+        <option value="paps">PAPS — Programa Anual de Prestación (completo)</option>
       </select>
       <div id="share-esp-wrap" style="display:none;margin-bottom:14px">
         <label style="display:block;font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Especialidad</label>
@@ -100,19 +103,28 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
 </div>
 <script>
 const SHARE_ESP=["MEDICINA FISICA Y REHABILITACION","OFTALMOLOGIA","DIALISIS","ODONTOLOGIA","ONCOLOGIA","PROCEDIMIENTOS CIRUGIA","OTORRINOLARINGOLOGIA","DERMATOLOGIA","NEUROLOGIA","POLICLINICO MEDICINA","ENDOSCOPIA","POLICLINICO CIRUGIA","TRANSPLANTE","CARDIOLOGIA","INFECTOLOGIA","MEDICINA NUCLEAR","ALIVIO DEL DOLOR","PSIQUIATRIA AMBULATORIA"];
+const SHARE_QX=["Cirugía general","Traumatología","ORL","Oftalmología","Urología","Dental","Laparoscopía"];
 const _titleCase=s=>s.toLowerCase().replace(/(^|\s)\p{L}/gu,c=>c.toUpperCase());
+let _espScope='';
 function openShare(){
-  const sel=document.getElementById('share-esp');
-  if(!sel.options.length){ sel.innerHTML=SHARE_ESP.map(e=>'<option value="'+e+'">'+_titleCase(e)+'</option>').join(''); }
   document.getElementById('share-scope').value='hub';
   updateShare(); document.getElementById('share-ov').style.display='flex';
 }
 function updateShare(){
   const scope=document.getElementById('share-scope').value;
-  document.getElementById('share-esp-wrap').style.display = scope==='esp' ? 'block' : 'none';
+  const byEsp = scope==='esp'||scope==='qxesp';
+  document.getElementById('share-esp-wrap').style.display = byEsp ? 'block' : 'none';
+  if(byEsp && _espScope!==scope){   // (re)poblar el desplegable con la lista correcta
+    const list = scope==='esp' ? SHARE_ESP : SHARE_QX;
+    document.getElementById('share-esp').innerHTML = list.map(e=>'<option value="'+e+'">'+_titleCase(e)+'</option>').join('');
+    _espScope=scope;
+  }
   let rel='index.html';
   if(scope==='equibox') rel='2.EquiBox.html';
   else if(scope==='esp') rel='2.EquiBox.html?especialidad='+encodeURIComponent(document.getElementById('share-esp').value);
+  else if(scope==='quirurbox') rel='1.QuirurBox.html';
+  else if(scope==='qxesp') rel='1.QuirurBox.html?especialidad='+encodeURIComponent(document.getElementById('share-esp').value);
+  else if(scope==='paps') rel='7.PAPS.html';
   document.getElementById('share-link').value=new URL(rel, location.href).href;
 }
 function copyShare(){
