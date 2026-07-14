@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manual de Buenas Prácticas — Hospital del Salvador · INGER</title>
+<link rel="icon" type="image/x-icon" href="Logos%20HUB-HDS/favicon-hds.ico">
+<link rel="icon" type="image/png" sizes="256x256" href="Logos%20HUB-HDS/favicon-hds.png">
+<link rel="shortcut icon" href="Logos%20HUB-HDS/favicon-hds.ico">
+<link rel="apple-touch-icon" href="Logos%20HUB-HDS/favicon-hds-180.png">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+
+/* ── HEADER ── */
+header{background:#1D2D5B;color:#fff;padding:14px 28px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 12px rgba(0,0,0,.28);position:sticky;top:0;z-index:50}
+.hub-back{background:rgba(41,170,226,.12);border:1px solid rgba(41,170,226,.3);color:#29aae2;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;flex-shrink:0;display:flex;align-items:center;gap:6px;transition:all .15s;letter-spacing:.02em}
+.hub-back:hover{background:rgba(41,170,226,.22);color:#fff}
+.hub-back svg{width:14px;height:14px}
+.logo-box{width:44px;height:44px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+.logo-box svg{width:24px;height:24px}
+.hd-title h1{font-size:18px;font-weight:800;letter-spacing:-.3px}
+.hd-title p{font-size:11px;opacity:.7;margin-top:1px}
+.hd-chips{margin-left:auto;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.hchip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:4px 11px;font-size:11px;font-weight:600;white-space:nowrap}
+.hchip.warn{background:rgba(180,83,9,.32);border-color:rgba(217,119,6,.5)}
+
+/* ── SEARCH ── */
+.toolbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 28px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:72px;z-index:40;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.search-wrap{position:relative;display:flex;align-items:center;flex:1;max-width:340px}
+.search-wrap svg{position:absolute;left:11px;width:15px;height:15px;color:#94a3b8;pointer-events:none}
+#searchBox{padding:8px 12px 8px 34px;border-radius:22px;border:1.5px solid #e2e8f0;font-size:13px;color:#1e293b;background:#fff;width:100%;outline:none;transition:border-color .15s}
+#searchBox:focus{border-color:#1D2D5B}
+.clear-search{position:absolute;right:11px;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:15px;display:none;line-height:1}
+.intro{margin-left:auto;font-size:11.5px;color:#64748b;max-width:420px;text-align:right}
+
+/* ── MAIN ── */
+.main{padding:24px 28px 60px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:15px}
+.mcard{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px;cursor:pointer;border-top:4px solid var(--cc);transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden}
+.mcard:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.12)}
+.mcard.hidden{display:none}
+.mc-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.mc-icon{width:46px;height:46px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;background:var(--cc)}
+.mc-icon svg{width:25px;height:25px}
+.mc-num{position:absolute;top:14px;right:16px;font-size:30px;font-weight:800;color:var(--cc);opacity:.12;line-height:1}
+.mc-name{font-size:15px;font-weight:800;color:#1e293b;line-height:1.2}
+.mc-cat{font-size:10px;font-weight:700;color:var(--cc);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.mc-desc{font-size:11.5px;color:#64748b;line-height:1.45;margin-bottom:12px;min-height:32px}
+.mc-foot{display:flex;align-items:center;justify-content:space-between}
+.badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:11px}
+.b-draft{background:#fef3c7;color:#b45309}
+.b-ready{background:#dcfce7;color:#15803d}
+.mc-open{font-size:11px;font-weight:700;color:var(--cc)}
+
+.no-results{text-align:center;padding:60px;color:#94a3b8;display:none}
+.no-results svg{width:40px;height:40px;margin-bottom:12px;opacity:.3}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:200;justify-content:center;align-items:flex-start;padding:32px 16px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:680px;max-width:100%;box-shadow:0 24px 60px rgba(0,0,0,.28);margin:auto}
+.modal-head{padding:22px 24px 18px;border-top:5px solid var(--mc);border-radius:16px 16px 0 0;display:flex;gap:14px;align-items:flex-start;position:relative}
+.m-icon{width:48px;height:48px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;background:var(--mc)}
+.m-icon svg{width:26px;height:26px}
+.m-title{font-size:19px;font-weight:800;color:#1e293b;line-height:1.2}
+.m-sub{font-size:12px;color:#64748b;margin-top:3px}
+.modal-close{position:absolute;top:14px;right:14px;background:#f1f5f9;border:none;cursor:pointer;font-size:15px;color:#64748b;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:#e2e8f0}
+.modal-body{padding:22px 24px 28px}
+.draft-note{display:flex;gap:12px;align-items:flex-start;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px 18px;margin-bottom:18px}
+.draft-note svg{width:22px;height:22px;color:#d97706;flex-shrink:0;margin-top:1px}
+.draft-note h4{font-size:13px;color:#92400e;margin-bottom:4px}
+.draft-note p{font-size:12px;color:#78716c;line-height:1.5}
+.m-sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.m-sec-title::after{content:'';flex:1;height:1px;background:#f1f5f9}
+.sec-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.sec-row{display:flex;align-items:center;gap:10px;font-size:12.5px;color:#334155;padding:9px 12px;background:#f8fafc;border-radius:8px;border-left:3px solid #e2e8f0}
+.sec-row .sr-n{width:22px;height:22px;border-radius:6px;background:#e2e8f0;color:#64748b;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
+
+@media(max-width:600px){
+  header{padding:10px 16px}.toolbar,.main{padding-left:14px;padding-right:14px}
+  .intro{display:none}.search-wrap{max-width:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="0.HUB.html" class="hub-back" title="Volver al HUB">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    HUB
+  </a>
+  <div class="logo-box">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+  </div>
+  <div class="hd-title">
+    <h1>Manual de Buenas Prácticas</h1>
+    <p>Hospital del Salvador · INGER — Servicios Concesionados CSSO</p>
+  </div>
+  <div class="hd-chips" id="statsChips"></div>
+</header>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zm-.06-4.32a6 6 0 1 0-12 0 6 6 0 0 0 12 0z"/></svg>
+    <input id="searchBox" type="text" placeholder="Buscar manual…" oninput="doSearch(this.value)">
+    <button class="clear-search" id="clearBtn" onclick="clearSearch()">✕</button>
+  </div>
+  <div class="intro">Manuales de buenas prácticas para usuarios de los servicios concesionados. Todos en elaboración.</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="cards-grid" id="grid"></div>
+  <div class="no-results" id="noResults">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <div style="font-size:14px;font-weight:700;color:#475569;margin-bottom:4px">Sin resultados</div>
+    <div style="font-size:12px">Prueba con otro término</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalBox">
+    <div class="modal-head" id="modalHead"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ── ICONOS (SVG por manual) ──
+var ICONS = {
+  parking:'<path d="M5 17h14M5 17a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2M7 17v3M17 17v3"/><path d="M9 14V9h3a2 2 0 0 1 0 4H9"/>',
+  food:'<path d="M3 2v7c0 1.1.9 2 2 2h0a2 2 0 0 0 2-2V2M5 2v9M11 2v20M11 8h3a2 2 0 0 0 2-2V2"/><path d="M19 2v20"/>',
+  locker:'<rect x="4" y="3" width="16" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="8" y1="9" x2="8" y2="11"/><line x1="16" y1="9" x2="16" y2="11"/>',
+  green:'<path d="M12 22V12M12 12c0-3 2-5 5-5 0 3-2 5-5 5zM12 14c0-3-2-5-5-5 0 3 2 5 5 5z"/><path d="M12 8c0-2.5 1.5-4 4-4 0 2.5-1.5 4-4 4z"/>',
+  medical:'<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M12 8v6M9 11h6"/><path d="M8 21h8"/>',
+  residence:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  auditorium:'<path d="M3 10h18M5 10V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4M4 10l1 10h14l1-10"/><path d="M9 14h6"/>',
+  meeting:'<circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/><path d="M16 14a4 4 0 0 1 4 4v1"/>'
+};
+
+// ── MANUALES ──
+// Estructura lista para llenar: agregar 'sections' a futuro (cada uno {n,title}).
+var MANUALS = [
+  {num:"01",key:"parking",   name:"Estacionamiento",   color:"#1D4ED8", status:"Borrador",
+   desc:"Uso correcto de estacionamientos para funcionarios y visitas.", sections:[]},
+  {num:"02",key:"food",      name:"Alimentación",      color:"#B45309", status:"Borrador",
+   desc:"Buenas prácticas en el servicio de alimentación a pacientes y funcionarios.", sections:[]},
+  {num:"03",key:"locker",    name:"Casilleros",        color:"#0E7490", status:"Borrador",
+   desc:"Asignación, uso y custodia de casilleros del personal.", sections:[]},
+  {num:"04",key:"green",     name:"Áreas Verdes",      color:"#15803D", status:"Borrador",
+   desc:"Cuidado y uso responsable de áreas verdes y paisajismo.", sections:[]},
+  {num:"05",key:"medical",   name:"Equipamiento Médico",color:"#7C3AED",status:"Borrador",
+   desc:"Uso, cuidado y reporte del equipamiento médico y mobiliario clínico.", sections:[]},
+  {num:"06",key:"residence", name:"Residencias",       color:"#0F766E", status:"Borrador",
+   desc:"Convivencia y uso de las residencias del establecimiento.", sections:[]},
+  {num:"07",key:"auditorium",name:"Auditorios",        color:"#BE185D", status:"Borrador",
+   desc:"Reserva y uso adecuado de los auditorios.", sections:[]},
+  {num:"08",key:"meeting",   name:"Salas de Reuniones", color:"#475569", status:"Borrador",
+   desc:"Reserva y buen uso de las salas de reuniones.", sections:[]},
+];
+
+var searchTerm = '';
+
+// ── STATS ──
+(function(){
+  var drafts = MANUALS.filter(function(m){return m.status==='Borrador';}).length;
+  var ready  = MANUALS.length - drafts;
+  var chips = '<div class="hchip">'+MANUALS.length+' manuales</div>'
+    + (drafts?'<div class="hchip warn">'+drafts+' en borrador</div>':'')
+    + (ready?'<div class="hchip">'+ready+' publicados</div>':'');
+  document.getElementById('statsChips').innerHTML = chips;
+})();
+
+function icon(key){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[key]||'')+'</svg>';
+}
+function statusBadge(s){
+  return s==='Borrador'
+    ? '<span class="badge b-draft">✎ Borrador</span>'
+    : '<span class="badge b-ready">✔ Publicado</span>';
+}
+function hl(text, term){
+  if(!term) return text;
+  var re=new RegExp('('+term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  return text.replace(re,'<mark style="background:#fef08a;border-radius:2px">$1</mark>');
+}
+function norm(x){ return (x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
+
+// ── RENDER ──
+function renderAll(){
+  var grid = document.getElementById('grid');
+  grid.innerHTML='';
+  var t = norm(searchTerm), shown=0;
+  MANUALS.forEach(function(m){
+    if(t && norm(m.name+' '+m.desc).indexOf(t)<0) return;
+    shown++;
+    var card=document.createElement('div');
+    card.className='mcard'; card.style.cssText='--cc:'+m.color;
+    card.onclick=function(){openModal(m.num);};
+    card.innerHTML =
+      '<div class="mc-num">'+m.num+'</div>'
+      +'<div class="mc-top"><div class="mc-icon">'+icon(m.key)+'</div>'
+        +'<div><div class="mc-name">'+hl(m.name,searchTerm)+'</div>'
+        +'<div class="mc-cat">Manual de buenas prácticas</div></div></div>'
+      +'<div class="mc-desc">'+hl(m.desc,searchTerm)+'</div>'
+      +'<div class="mc-foot">'+statusBadge(m.status)+'<span class="mc-open">Ver →</span></div>';
+    grid.appendChild(card);
+  });
+  document.getElementById('noResults').style.display = shown===0 ? 'flex':'none';
+}
+
+function doSearch(v){
+  searchTerm=v.trim();
+  document.getElementById('clearBtn').style.display=v?'block':'none';
+  renderAll();
+}
+function clearSearch(){ document.getElementById('searchBox').value=''; doSearch(''); }
+
+// ── MODAL ──
+function openModal(num){
+  var m = MANUALS.find(function(x){return x.num===num;});
+  if(!m) return;
+  var ov=document.getElementById('modalOverlay');
+  document.getElementById('modalBox').style.setProperty('--mc',m.color);
+  document.getElementById('modalHead').style.setProperty('--mc',m.color);
+  document.getElementById('modalHead').innerHTML =
+    '<div class="m-icon">'+icon(m.key)+'</div>'
+    +'<div style="flex:1;min-width:0"><div class="m-title">'+m.name+'</div>'
+    +'<div class="m-sub">Manual '+m.num+' · Buenas prácticas · '+m.status+'</div></div>'
+    +'<button class="modal-close" onclick="closeModal()">✕</button>';
+
+  var html='';
+  if(m.status==='Borrador'){
+    html += '<div class="draft-note">'
+      +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>'
+      +'<div><h4>Manual en elaboración</h4>'
+      +'<p>El contenido de este manual está en estado borrador. Pronto se incorporarán las secciones, recomendaciones y procedimientos de buenas prácticas para '+m.name.toLowerCase()+'.</p></div></div>';
+  }
+  if(m.sections && m.sections.length){
+    html += '<div class="m-sec-title">Contenido</div><ul class="sec-list">'
+      + m.sections.map(function(sc,i){return '<li class="sec-row"><span class="sr-n">'+(i+1)+'</span>'+sc.title+'</li>';}).join('')
+      + '</ul>';
+  } else {
+    html += '<div class="m-sec-title">Contenido</div>'
+      +'<div style="font-size:12.5px;color:#94a3b8;padding:14px 16px;background:#f8fafc;border-radius:10px;text-align:center">Secciones por definir.</div>';
+  }
+  document.getElementById('modalBody').innerHTML=html;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+// ── MODO PÚBLICO (consulta) — el deploy invierte PUBLIC_BUILD a true ─────────
+const PUBLIC_BUILD = true; /*__PUBLIC_FLAG__*/
+const PUBLIC = PUBLIC_BUILD || new URLSearchParams(location.search).get('public')==='1';
+function applyPublicMode(){ if(PUBLIC) document.body.classList.add('public'); }
+// ── INIT ──
+renderAll();
+applyPublicMode();
+</script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Correo Neumático · HDS</title>
+<link rel="icon" type="image/x-icon" href="Logos%20HUB-HDS/favicon-hds.ico">
+<link rel="icon" type="image/png" sizes="256x256" href="Logos%20HUB-HDS/favicon-hds.png">
+<link rel="shortcut icon" href="Logos%20HUB-HDS/favicon-hds.ico">
+<link rel="apple-touch-icon" href="Logos%20HUB-HDS/favicon-hds-180.png">
+
+<script src="SHARED_DATA/correo_neumatico.js"></script>
+<style>
+:root{
+  --bg:#0b1228;--panel:#111a36;--panel2:#0f1730;--border:#1e293b;--border2:#28406b;
+  --cyan:#22d3ee;--text:#e6eefc;--muted:#9fb2d4;--dim:#5d75a6;
+  --t1:#a855f7;--t2:#38bdf8;--t3:#eab308;--t4:#fb923c;--gen:#94a3b8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:radial-gradient(1200px 700px at 70% -10%,#16224a,#0b1228 60%);
+  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--border);
+  background:rgba(10,16,40,.6);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+header .logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#22d3ee,#6366f1);
+  display:flex;align-items:center;justify-content:center;font-size:22px}
+header h1{margin:0;font-size:17px;font-weight:800}
+header .sub{font-size:11px;color:var(--muted)}
+.hub-back{background:rgba(255,255,255,.06);border:1px solid var(--border2);color:var(--muted);
+  padding:8px 14px;border-radius:9px;font-size:12px;font-weight:600}
+.hub-back:hover{background:rgba(255,255,255,.12);color:#fff}
+.wrap{max-width:1280px;margin:0 auto;padding:20px}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+.kpi .n{font-size:26px;font-weight:800;color:var(--cyan)}
+.kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+
+/* Tabs */
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted);
+  padding:9px 16px;border-radius:10px;font-size:13px;font-weight:700}
+.tab.on{background:linear-gradient(135deg,#22d3ee,#3b82f6);border:none;color:#06223a}
+
+.view{display:none}.view.on{display:block}
+
+/* Filtros */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.filters input[type=text]{flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--border2);
+  color:var(--text);border-radius:10px;padding:10px 14px;font-size:13px;outline:none}
+.filters select{background:var(--panel2);border:1px solid var(--border2);color:var(--text);
+  border-radius:10px;padding:9px 12px;font-size:12px;outline:none}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.fchip{background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted);
+  padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.fchip.on{color:#fff}
+.fchip.t1.on{background:var(--t1);border-color:var(--t1)}
+.fchip.t2.on{background:var(--t2);border-color:var(--t2);color:#06223a}
+.fchip.t3.on{background:var(--t3);border-color:var(--t3);color:#3a2e00}
+.fchip.t4.on{background:var(--t4);border-color:var(--t4);color:#3a1c00}
+.fchip.gen.on{background:var(--gen);border-color:var(--gen);color:#1a2030}
+
+/* Grid de estaciones */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.st{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;border-left:4px solid var(--c,#64748b);position:relative}
+.st .top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.st .sysdot{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.st .id{font-size:11px;font-family:ui-monospace,monospace;color:var(--dim)}
+.st .nm{font-size:14px;font-weight:800;margin:2px 0}
+.st .row{font-size:12px;color:var(--muted);margin:3px 0;display:flex;gap:6px}
+.st .row b{color:var(--text);font-weight:600}
+.st .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.bdg{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--muted)}
+.bdg.sys{color:#fff;background:var(--c)}
+.bdg.tipo{background:rgba(34,211,238,.15);color:var(--cyan)}
+.empty{text-align:center;color:var(--dim);padding:40px;font-style:italic}
+
+/* Vista por sistema */
+.sys-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px;border-top:4px solid var(--c)}
+.sys-head{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.sys-head .tag{font-size:13px;font-weight:800;color:#fff;background:var(--c);padding:3px 12px;border-radius:8px}
+.sys-head h3{margin:0;font-size:16px;font-weight:800}
+.sys-meta{font-size:12px;color:var(--muted);margin-bottom:12px}
+.sys-nodes{display:flex;flex-direction:column;gap:6px}
+.node{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:13px}
+.node.central{border-color:var(--c);background:rgba(255,255,255,.04);font-weight:700}
+.node .nid{font-family:ui-monospace,monospace;font-size:10px;color:var(--dim);min-width:120px}
+.node .ntipo{margin-left:auto;font-size:10px;color:var(--muted);background:rgba(255,255,255,.06);padding:2px 8px;border-radius:6px}
+
+/* Specs / docs */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px}
+.card h2{margin:0 0 12px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--cyan)}
+.spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.spec{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.spec .k{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+.spec .v{font-size:13px;font-weight:600;margin-top:2px}
+.docnote{font-size:12px;color:var(--muted);line-height:1.6}
+.btn{background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.4);color:var(--cyan);
+  border-radius:9px;padding:9px 16px;font-size:12px;font-weight:700}
+.btn:hover{background:rgba(34,211,238,.22)}
+.toolbar{display:flex;justify-content:flex-end;margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="hub-back" href="0.HUB.html" title="Volver al HUB">← HUB</a>
+  <div class="logo">✉️</div>
+  <div>
+    <h1>Correo Neumático · HDS</h1>
+    <div class="sub" id="hdrSub">Directorio de estaciones · sistemas T1–T4</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
+  <div class="tabs">
+    <button class="tab on" data-v="dir" onclick="setView('dir')">📇 Directorio</button>
+    <button class="tab" data-v="sys" onclick="setView('sys')">🔀 Por sistema</button>
+    <button class="tab" data-v="info" onclick="setView('info')">⚙ Especificaciones</button>
+  </div>
+
+  <!-- DIRECTORIO -->
+  <div class="view on" id="view-dir">
+    <div class="filters">
+      <input type="text" id="q" placeholder="Buscar por estación, ubicación, servicio o id…" oninput="renderDir()">
+      <select id="fEdif" onchange="renderDir()"><option value="">Todos los edificios</option></select>
+      <select id="fPiso" onchange="renderDir()"><option value="">Todos los pisos</option></select>
+      <select id="fTipo" onchange="renderDir()"><option value="">Todos los tipos</option></select>
+    </div>
+    <div class="chip-row" id="sysChips"></div>
+    <div class="toolbar"><button class="btn" onclick="exportCSV()">📥 Exportar CSV</button></div>
+    <div class="grid" id="dirGrid"></div>
+  </div>
+
+  <!-- POR SISTEMA -->
+  <div class="view" id="view-sys"></div>
+
+  <!-- ESPECIFICACIONES -->
+  <div class="view" id="view-info">
+    <div class="card">
+      <h2>Especificaciones técnicas</h2>
+      <div class="spec-grid" id="specGrid"></div>
+    </div>
+    <div class="card">
+      <h2>Documentación (manuales y planos)</h2>
+      <p class="docnote">Aquí se enlazarán los <b>manuales de uso</b> y los <b>planos de distribución</b> por edificio/piso cuando estén disponibles. Para agregarlos, déjalos en una carpeta del proyecto y se vinculan a cada sistema o estación.</p>
+      <div id="docList" class="spec-grid" style="margin-top:10px"></div>
+    </div>
+    <div class="card">
+      <h2>Fuente</h2>
+      <p class="docnote" id="fuente"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = window.CORREO_NEUMATICO_DATA || {estaciones:[],sistemas:{},tipos_estacion:{},stats:{},especificaciones_tecnicas:{}};
+const EST = DATA.estaciones||[];
+const SYS = DATA.sistemas||{};
+const TIPOS = DATA.tipos_estacion||{};
+const SYS_COLOR = {T1:'var(--t1)',T2:'var(--t2)',T3:'var(--t3)',T4:'var(--t4)',GEN:'var(--gen)'};
+let _sysFilter = ''; // chip de sistema activo
+
+const esc = s => (s||'').toString().replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uniq = arr => [...new Set(arr)].filter(Boolean).sort();
+
+// ── KPIs ──
+function renderKpis(){
+  const s = DATA.stats || {};
+  const kpis = [
+    ['Estaciones', EST.length],
+    ['Edificios', Object.keys(s.por_edificio||{}).length || uniq(EST.map(e=>e.edificio)).length],
+    ['Sistemas', Object.keys(SYS).length],
+    ['Servicios', s.servicios_cubiertos || uniq(EST.map(e=>e.servicio)).length]
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(([l,n])=>`<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+}
+
+// ── Poblar filtros ──
+function fillFilters(){
+  const ed=document.getElementById('fEdif'), pi=document.getElementById('fPiso'), ti=document.getElementById('fTipo');
+  uniq(EST.map(e=>e.edificio)).forEach(v=>ed.innerHTML+=`<option value="${v}">${v}</option>`);
+  uniq(EST.map(e=>e.piso)).forEach(v=>pi.innerHTML+=`<option value="${v}">${v}</option>`);
+  uniq(EST.map(e=>e.tipo)).forEach(v=>ti.innerHTML+=`<option value="${v}">${TIPOS[v]||v}</option>`);
+  // chips de sistema
+  const chips=document.getElementById('sysChips');
+  chips.innerHTML = `<span class="fchip ${_sysFilter===''?'on':''}" style="${_sysFilter===''?'background:#334155;border-color:#334155;color:#fff':''}" onclick="setSys('')">Todos</span>` +
+    Object.keys(SYS).map(k=>`<span class="fchip ${k.toLowerCase()} ${_sysFilter===k?'on':''}" onclick="setSys('${k}')">${k} · ${esc(SYS[k].nombre)}</span>`).join('');
+}
+function setSys(k){ _sysFilter=k; fillFilters(); renderDir(); }
+
+// ── Directorio ──
+function renderDir(){
+  const q=(document.getElementById('q').value||'').toLowerCase().trim();
+  const fe=document.getElementById('fEdif').value, fp=document.getElementById('fPiso').value, ft=document.getElementById('fTipo').value;
+  let rows = EST.filter(e=>{
+    if(_sysFilter && e.sistema!==_sysFilter) return false;
+    if(fe && e.edificio!==fe) return false;
+    if(fp && e.piso!==fp) return false;
+    if(ft && e.tipo!==ft) return false;
+    if(q){ const blob=[e.id,e.nombre,e.ubicacion,e.servicio,e.edificio,e.piso,e.sistema].join(' ').toLowerCase(); if(!blob.includes(q)) return false; }
+    return true;
+  });
+  const grid=document.getElementById('dirGrid');
+  if(!rows.length){ grid.innerHTML='<div class="empty">Sin estaciones que coincidan con el filtro.</div>'; return; }
+  grid.innerHTML = rows.map(e=>{
+    const col = SYS_COLOR[e.sistema]||'#64748b';
+    return `<div class="st" style="--c:${col}">
+      <div class="top"><span class="sysdot"></span><span class="id">${esc(e.id)}</span></div>
+      <div class="nm">${esc(e.nombre)}</div>
+      <div class="row">📍 <b>${esc(e.ubicacion||'—')}</b></div>
+      <div class="row">🏥 ${esc(e.servicio||'—')}</div>
+      <div class="row">🏢 ${esc(e.edificio)} · ${esc(e.piso)}${e.altura?' · '+esc(e.altura):''}</div>
+      <div class="badges">
+        <span class="bdg sys" style="--c:${col}">${esc(e.sistema)}</span>
+        <span class="bdg tipo">${esc(TIPOS[e.tipo]||e.tipo)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Por sistema (esquema lógico) ──
+function renderSys(){
+  const wrap=document.getElementById('view-sys');
+  const orden=['equipo_impulsion','recepcion_masiva','masivo','final','paso','auxiliar'];
+  wrap.innerHTML = Object.keys(SYS).map(k=>{
+    const col=SYS_COLOR[k]||'#64748b';
+    const sys=SYS[k];
+    const nodes = EST.filter(e=>e.sistema===k).sort((a,b)=>orden.indexOf(a.tipo)-orden.indexOf(b.tipo));
+    return `<div class="sys-card" style="--c:${col}">
+      <div class="sys-head"><span class="tag">${esc(k)}</span><h3>${esc(sys.nombre)}</h3></div>
+      <div class="sys-meta">Edificio(s): ${(sys.edificios||[]).join(', ')||'—'} · Tubería: ${esc(sys.diametro||'—')} · ${nodes.length} estaciones</div>
+      <div class="sys-nodes">${nodes.map(n=>{
+        const central = (n.tipo==='masivo'||n.tipo==='recepcion_masiva'||n.tipo==='equipo_impulsion');
+        return `<div class="node ${central?'central':''}">
+          <span class="nid">${esc(n.id)}</span>
+          <span>${central?'⭑ ':''}${esc(n.nombre)} — <span style="color:var(--muted)">${esc(n.ubicacion||'')}</span></span>
+          <span class="ntipo">${esc(TIPOS[n.tipo]||n.tipo)}</span>
+        </div>`;
+      }).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Especificaciones ──
+function renderInfo(){
+  const sp=DATA.especificaciones_tecnicas||{};
+  const labels={diametro_tuberia:'Diámetro tubería',capsulas:'Cápsulas',carga_max_capsula:'Carga máx. cápsula',
+    velocidad_envio:'Velocidad de envío',alimentacion_turbinas:'Alimentación turbinas',normativa_pvc:'Normativa PVC',
+    sello_cortafuego:'Sello cortafuego',radio_min_curvatura:'Radio mín. curvatura'};
+  document.getElementById('specGrid').innerHTML = Object.entries(sp).map(([k,v])=>
+    `<div class="spec"><div class="k">${esc(labels[k]||k)}</div><div class="v">${esc(v)}</div></div>`).join('') || '<div class="empty">Sin especificaciones.</div>';
+  // documentos por sistema (placeholders)
+  document.getElementById('docList').innerHTML = Object.keys(SYS).map(k=>
+    `<div class="spec"><div class="k">Sistema ${esc(k)}</div><div class="v" style="font-size:12px;color:var(--dim)">Manual y plano: pendiente de cargar</div></div>`).join('');
+  document.getElementById('fuente').innerHTML = `${esc(DATA.fuente||'—')}<br><span style="color:var(--dim)">Versión: ${esc(DATA.version||'')} · Generado: ${esc(DATA.generado||'')}</span><br><span style="color:var(--dim)">${esc(DATA.observacion||'')}</span>`;
+}
+
+// ── Tabs ──
+function setView(v){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
+  document.getElementById('view-'+v).classList.add('on');
+  if(v==='sys') renderSys();
+  if(v==='info') renderInfo();
+}
+
+// ── Export CSV ──
+function exportCSV(){
+  const head=['id','edificio','piso','altura','sistema','tipo','nombre','ubicacion','servicio'];
+  const rows=[head].concat(EST.map(e=>head.map(h=>e[h]||'')));
+  const csv=rows.map(r=>r.map(v=>`"${(v||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='correo_neumatico_HDS.csv'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},100);
+}
+
+// ── Init ──
+// ── MODO PÚBLICO (consulta) — el deploy invierte PUBLIC_BUILD a true ─────────
+const PUBLIC_BUILD = true; /*__PUBLIC_FLAG__*/
+const PUBLIC = PUBLIC_BUILD || new URLSearchParams(location.search).get('public')==='1';
+function applyPublicMode(){ if(PUBLIC) document.body.classList.add('public'); }
+function applyUrlFilter(){ const s=new URLSearchParams(location.search).get('sistema'); if(s&&typeof setSys==='function') setSys(s); }
+renderKpis(); fillFilters(); renderDir();
+applyPublicMode(); applyUrlFilter();
+document.getElementById('hdrSub').textContent = `${EST.length} estaciones · ${Object.keys(SYS).length} sistemas · ${uniq(EST.map(e=>e.edificio)).length} edificios`;
+</script>
+</body>
+</html>

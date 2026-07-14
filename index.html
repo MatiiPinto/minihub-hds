@@ -64,6 +64,18 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
       <div class="pcard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
       <div class="pcard-foot"><span class="pcard-name">PAPS</span><span class="pcard-arrow">&#8594;</span></div>
     </a>
+    <a class="pcard" href="3.QuiroBox.html" title="QuiroBox — Equipamiento de pabellones quirúrgicos">
+      <div class="pcard-icon" style="background:linear-gradient(135deg,#1d4ed8 0%,#1e3a8a 100%)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+      <div class="pcard-foot"><span class="pcard-name">QuiroBox · Pabellones</span><span class="pcard-arrow">&#8594;</span></div>
+    </a>
+    <a class="pcard" href="25.CorreoNeumatico.html" title="Correo Neumático — sistema de transporte por tubos">
+      <div class="pcard-icon" style="background:linear-gradient(135deg,#0891b2 0%,#155e75 100%)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="3"/><rect x="3" y="14" width="18" height="6" rx="3"/><line x1="7" y1="7" x2="7.01" y2="7"/><line x1="7" y1="17" x2="7.01" y2="17"/></svg></div>
+      <div class="pcard-foot"><span class="pcard-name">Correo Neumático</span><span class="pcard-arrow">&#8594;</span></div>
+    </a>
+    <a class="pcard" href="26.ManualBuenasPracticas.html" title="Manual de Buenas Prácticas">
+      <div class="pcard-icon" style="background:linear-gradient(135deg,#059669 0%,#065f46 100%)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <div class="pcard-foot"><span class="pcard-name">Buenas Prácticas</span><span class="pcard-arrow">&#8594;</span></div>
+    </a>
   </div>
 </main>
 <footer>
@@ -86,6 +98,10 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
         <option value="esp">EquiBox — por especialidad médica…</option>
         <option value="quirurbox">QuirurBox — Instrumental quirúrgico (completo)</option>
         <option value="qxesp">QuirurBox — por especialidad…</option>
+        <option value="quirobox">QuiroBox — Equipamiento de pabellones (completo)</option>
+        <option value="correo">Correo Neumático (completo)</option>
+        <option value="correosis">Correo Neumático — por sistema…</option>
+        <option value="bp">Buenas Prácticas (completo)</option>
         <option value="paps">PAPS — Programa Anual de Prestación (completo)</option>
       </select>
       <div id="share-esp-wrap" style="display:none;margin-bottom:14px">
@@ -104,6 +120,7 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
 <script>
 const SHARE_ESP=["MEDICINA FISICA Y REHABILITACION","OFTALMOLOGIA","DIALISIS","ODONTOLOGIA","ONCOLOGIA","PROCEDIMIENTOS CIRUGIA","OTORRINOLARINGOLOGIA","DERMATOLOGIA","NEUROLOGIA","POLICLINICO MEDICINA","ENDOSCOPIA","POLICLINICO CIRUGIA","TRANSPLANTE","CARDIOLOGIA","INFECTOLOGIA","MEDICINA NUCLEAR","ALIVIO DEL DOLOR","PSIQUIATRIA AMBULATORIA"];
 const SHARE_QX=["Cirugía general","Traumatología","ORL","Oftalmología","Urología","Dental","Laparoscopía"];
+const SHARE_SYS=["T1","T2","T3","T4","GEN"];
 const _titleCase=s=>s.toLowerCase().replace(/(^|\s)\p{L}/gu,c=>c.toUpperCase());
 let _espScope='';
 function openShare(){
@@ -112,18 +129,23 @@ function openShare(){
 }
 function updateShare(){
   const scope=document.getElementById('share-scope').value;
-  const byEsp = scope==='esp'||scope==='qxesp';
+  const byEsp = scope==='esp'||scope==='qxesp'||scope==='correosis';
   document.getElementById('share-esp-wrap').style.display = byEsp ? 'block' : 'none';
   if(byEsp && _espScope!==scope){   // (re)poblar el desplegable con la lista correcta
-    const list = scope==='esp' ? SHARE_ESP : SHARE_QX;
-    document.getElementById('share-esp').innerHTML = list.map(e=>'<option value="'+e+'">'+_titleCase(e)+'</option>').join('');
+    const list = scope==='esp' ? SHARE_ESP : (scope==='qxesp' ? SHARE_QX : SHARE_SYS);
+    document.getElementById('share-esp').innerHTML = list.map(e=>'<option value="'+e+'">'+(scope==='correosis'?e:_titleCase(e))+'</option>').join('');
     _espScope=scope;
   }
+  const espVal=()=>encodeURIComponent(document.getElementById('share-esp').value);
   let rel='index.html';
   if(scope==='equibox') rel='2.EquiBox.html';
-  else if(scope==='esp') rel='2.EquiBox.html?especialidad='+encodeURIComponent(document.getElementById('share-esp').value);
+  else if(scope==='esp') rel='2.EquiBox.html?especialidad='+espVal();
   else if(scope==='quirurbox') rel='1.QuirurBox.html';
-  else if(scope==='qxesp') rel='1.QuirurBox.html?especialidad='+encodeURIComponent(document.getElementById('share-esp').value);
+  else if(scope==='qxesp') rel='1.QuirurBox.html?especialidad='+espVal();
+  else if(scope==='quirobox') rel='3.QuiroBox.html';
+  else if(scope==='correo') rel='25.CorreoNeumatico.html';
+  else if(scope==='correosis') rel='25.CorreoNeumatico.html?sistema='+espVal();
+  else if(scope==='bp') rel='26.ManualBuenasPracticas.html';
   else if(scope==='paps') rel='7.PAPS.html';
   document.getElementById('share-link').value=new URL(rel, location.href).href;
 }
