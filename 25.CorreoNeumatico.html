@@ -290,5 +290,7 @@ renderKpis(); fillFilters(); renderDir();
 applyPublicMode(); applyUrlFilter();
 document.getElementById('hdrSub').textContent = `${EST.length} estaciones · ${Object.keys(SYS).length} sistemas · ${uniq(EST.map(e=>e.edificio)).length} edificios`;
 </script>
+
+<script>if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){navigator.serviceWorker.register('sw.js').catch(function(){});}</script>
 </body>
 </html>

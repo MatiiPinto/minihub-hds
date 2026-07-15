@@ -24,14 +24,35 @@ main{max-width:1000px;margin:0 auto;padding:48px 24px 80px;background:#fff url('
 .platforms{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:920px;margin:0 auto;}
 .pcard{border-radius:14px;overflow:hidden;border:2px solid rgba(29,45,91,.10);background:var(--navy3);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;display:block;text-decoration:none;position:relative;box-shadow:0 4px 20px rgba(29,45,91,.18);}
 .pcard:hover{transform:translateY(-5px) scale(1.01);border-color:rgba(41,170,226,.5);box-shadow:0 16px 40px rgba(29,45,91,.30),0 0 0 1px rgba(41,170,226,.18);}
-.pcard-img{display:block;width:100%;height:170px;object-fit:cover;border-radius:11px 11px 0 0;}
-.pcard-icon{display:flex;align-items:center;justify-content:center;height:170px;border-radius:11px 11px 0 0;background:linear-gradient(135deg,#0d9488 0%,#0f766e 100%);}
-.pcard-icon svg{width:60px;height:60px;color:#ccfbf1;}
+/* Tarjetas al mismo tamaño que el HUB local: los banners (600×230) se muestran
+   completos, sin recorte; las tarjetas de ícono comparten la misma proporción. */
+.pcard-img{display:block;width:100%;height:auto;aspect-ratio:600/230;object-fit:cover;border-radius:11px 11px 0 0;}
+.pcard-icon{display:flex;align-items:center;justify-content:center;height:auto;aspect-ratio:600/230;border-radius:11px 11px 0 0;background:linear-gradient(135deg,#0d9488 0%,#0f766e 100%);}
+.pcard-icon svg{width:48px;height:48px;color:#ccfbf1;}
 .pcard-foot{padding:13px 16px 14px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.3);}
 .pcard-name{font-size:.86rem;font-weight:600;color:rgba(255,255,255,.85);letter-spacing:.03em;}
 .pcard-arrow{color:var(--cyan);font-size:1rem;opacity:.8;}
 footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);padding:16px 40px;display:flex;align-items:center;justify-content:space-between;font-size:.66rem;color:var(--gray2);}
-@media(max-width:600px){header{padding:0 18px;}main{padding:28px 14px 60px;}.platforms{grid-template-columns:1fr;}.header-right{display:none;}}
+/* ── Misión / Visión (sutil, bajo las plataformas) ── */
+.inst{max-width:920px;margin:64px auto 0;}
+.inst-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.inst-card{background:#fafcfe;border:1px solid rgba(29,45,91,.10);border-left:3px solid rgba(41,170,226,.55);border-radius:10px;padding:18px 20px 16px;box-shadow:0 2px 10px rgba(29,45,91,.05);}
+.inst-k{font-size:.66rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#1D2D5B;margin-bottom:8px;}
+.inst-card p{font-size:.78rem;line-height:1.65;color:#475569;margin:0;text-align:justify;}
+.inst-card strong{color:#1D2D5B;font-weight:600;}
+.inst-note{font-size:.7rem;color:#94a3b8;text-align:center;margin:18px 0 0;letter-spacing:.02em;}
+@media(max-width:600px){
+  header{padding:8px 14px;height:auto;min-height:56px;gap:10px;}
+  .header-left{gap:10px;min-width:0;}
+  .header-logo{height:30px;}
+  .header-divider{display:none;}
+  .header-title{font-size:.66rem;letter-spacing:.1em;}
+  .header-sub{display:none;}
+  .header-right{display:none;}
+  main{padding:28px 14px 60px;}
+  .platforms{grid-template-columns:1fr;}
+  .inst-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
@@ -77,6 +98,22 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
       <div class="pcard-foot"><span class="pcard-name">Buenas Prácticas</span><span class="pcard-arrow">&#8594;</span></div>
     </a>
   </div>
+
+  <!-- ── Misión / Visión · Cuenta Pública Participativa Gestión 2025 ── -->
+  <section class="inst">
+    <div class="section-label">Hospital del Salvador · desde 1871</div>
+    <div class="inst-grid">
+      <div class="inst-card">
+        <div class="inst-k">Misión</div>
+        <p>El Hospital del Salvador <strong>es un centro de excelencia en salud y docente</strong>, que combina <strong>atención humana, gestión estratégica e innovación científica</strong> para resolver las necesidades sanitarias de manera equitativa, eficiente y sostenible, formando profesionales de alto rendimiento, generando conocimiento de impacto nacional y contribuyendo a la transformación del sistema de salud chileno hacia una medicina más inclusiva y resiliente.</p>
+      </div>
+      <div class="inst-card">
+        <div class="inst-k">Visión</div>
+        <p>Ser un hospital gentil, eficiente y de excelencia organizacional, <strong>reconocido por ofrecer una experiencia de salud segura, personalizada y oportuna</strong>.</p>
+      </div>
+    </div>
+    <p class="inst-note">Institución asistencial docente que atiende a más de 750.000 personas.</p>
+  </section>
 </main>
 <footer>
   <span>Hospital del Salvador · Ingeniería Biomédica Hospitalaria</span>
@@ -154,6 +191,11 @@ function copyShare(){
   const done=()=>{ const b=document.getElementById('share-copy'); const t=b.textContent; b.textContent='✔ Copiado'; setTimeout(()=>b.textContent=t,1600); };
   if(navigator.clipboard){ navigator.clipboard.writeText(inp.value).then(done,()=>{document.execCommand('copy');done();}); }
   else { document.execCommand('copy'); done(); }
+}
+// Service worker: cachea el HUB para que la segunda visita sea instantánea
+// (stale-while-revalidate; ver sw.js). Solo en https/localhost, nunca en file://.
+if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
 }
 </script>
 </body>
