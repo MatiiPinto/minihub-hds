@@ -542,6 +542,7 @@ table.excel-tbl tr:nth-child(even) td{background:#f8fafc}
     <div class="modal-title-area"><div class="modal-title" id="modalTitle"></div><div class="modal-specialty" id="modalSpecialty"></div></div>
     <div class="modal-info-grid" id="modalInfoGrid"></div>
     <div class="modal-supplier" id="modalSupplier"></div>
+    <div id="modalCatLink"></div>
     <div class="modal-catalog" id="modalCatalog"></div>
     <div class="modal-pieces" id="modalPieces"></div>
   </div>
@@ -560,6 +561,7 @@ table.excel-tbl tr:nth-child(even) td{background:#f8fafc}
 </div>
 <script src="data/quirurbox_adjudicado.js"></script>
 <script src="data/quirurbox_boxes.js"></script>
+<script src="data/quirurbox_catalogos.js"></script>
 <script>
 const BOXES = window.QUIRURBOX_BOXES;
 // ── Totales del header (Familias · Tipologías · Cajas · Instrumental) ──
@@ -967,6 +969,16 @@ function openModal(id){
   } else {
     suppEl.style.display='none';
   }
+
+  // Link a la carpeta de catálogos del proveedor en Drive (como EquiBox)
+  const esc2=s=>(s||'').toString().replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const clEl=document.getElementById('modalCatLink');
+  const cat=(window.QUIRURBOX_CATALOGOS||{})[b.id];
+  if(cat&&cat.url){
+    clEl.innerHTML=`<a href="${cat.url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;margin:2px 0 12px;padding:9px 14px;background:#eef6ff;border:1.5px solid #93c5fd;border-radius:9px;color:#1d4ed8;font-size:12.5px;font-weight:700;text-decoration:none">
+      📚 Catálogos ${cat.general?'· carpeta general':'del proveedor · '+esc2(cat.carpeta.replace(/^\d+\./,''))}${cat.marca?(' ('+esc2(cat.marca)+')'):''}
+      <span style="font-size:10px;font-weight:600;color:#64748b">Drive ↗</span></a>`;
+  } else clEl.innerHTML='';
 
   // Catálogo del proveedor real (galería a nivel de caja)
   const catEl=document.getElementById('modalCatalog');
