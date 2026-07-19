@@ -12,7 +12,7 @@
 // a la URL para ver los eventos en la consola sin depender del endpoint.
 // ════════════════════════════════════════════════════════════════════════════
 (function(){
-  var METRICS_URL = ''; /*__METRICS_URL__*/
+  var METRICS_URL = 'https://script.google.com/macros/s/AKfycbxw6n_702jMlCGYBC6pZ6irM1PlZnj_R9WBH6YnODl3w-3NVQM2rU1o23Ql856oAawf/exec'; /*__METRICS_URL__*/
   var DEBUG = /[?&]mdebug=1/.test(location.search);
   if (!METRICS_URL && !DEBUG) return;
 

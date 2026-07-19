@@ -51,7 +51,38 @@ function doPost(e) {
   }
 }
 
-// GET de prueba: abrir la URL /exec debe responder "Métricas HUB público activas".
-function doGet() {
-  return ContentService.createTextOutput('Métricas HUB público activas');
+// GET:
+//   /exec              → "Métricas HUB público activas" (prueba)
+//   /exec?list=1&dias=90 → JSON con las filas de los últimos N días (def. 90,
+//                          máx. 365) para la reportería local 32.MetricasWeb.
+function doGet(e) {
+  try {
+    var p = (e && e.parameter) || {};
+    if (p.list) {
+      var dias  = Math.max(1, Math.min(365, parseInt(p.dias, 10) || 90));
+      var desde = new Date(Date.now() - dias * 864e5);
+      var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('METRICAS');
+      var out = [];
+      if (sh && sh.getLastRow() > 1) {
+        var data = sh.getRange(2, 1, sh.getLastRow() - 1, 8).getValues();
+        for (var i = 0; i < data.length; i++) {
+          var f = data[i][0];
+          var esFecha = Object.prototype.toString.call(f) === '[object Date]';
+          var fd = esFecha ? f : new Date(String(f) + 'T12:00:00');
+          if (!isNaN(fd) && fd < desde) continue;
+          out.push({
+            f: esFecha ? Utilities.formatDate(f, TZ, 'yyyy-MM-dd') : String(f),
+            h: (Object.prototype.toString.call(data[i][1]) === '[object Date]') ? Utilities.formatDate(data[i][1], TZ, 'HH:mm:ss') : String(data[i][1]),
+            v: String(data[i][2]), s: String(data[i][3]), e: String(data[i][4]),
+            p: String(data[i][5]), d: String(data[i][6]), disp: String(data[i][7])
+          });
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify(out))
+                           .setMimeType(ContentService.MimeType.JSON);
+    }
+    return ContentService.createTextOutput('Métricas HUB público activas');
+  } catch (err) {
+    return ContentService.createTextOutput('error: ' + err);
+  }
 }
