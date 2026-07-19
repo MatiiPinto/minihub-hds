@@ -1613,7 +1613,12 @@ function _3dKeyHandler(e){ if(e.key==='Escape') close3DView(); }
 // es de consulta: no tiene herramientas de edición que ocultar. Probar: ?public=1
 const PUBLIC_BUILD = true; /*__PUBLIC_FLAG__*/
 const PUBLIC = PUBLIC_BUILD || new URLSearchParams(location.search).get('public')==='1';
-function applyPublicMode(){ if(PUBLIC) document.body.classList.add('public'); }
+function applyPublicMode(){ if(!PUBLIC) return; document.body.classList.add('public');
+  // Fotos de piezas fuera de la publicación (mayor consulta: catálogo de la marca).
+  // Los botones 👁 se re-renderizan por tabla → regla CSS persistente.
+  const st=document.createElement('style');
+  st.textContent='body.public .eye-btn{display:none !important;}';
+  document.head.appendChild(st); }
 // ?especialidad=Oftalmologia · ?servicio=X → arranca filtrado por especialidad
 function applyUrlFilter(){
   const q=new URLSearchParams(location.search);
