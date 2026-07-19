@@ -544,7 +544,7 @@ function toggleSim(){
 // ── MODO PÚBLICO (consulta) — el deploy invierte PUBLIC_BUILD a true ─────────
 const PUBLIC_BUILD = true; /*__PUBLIC_FLAG__*/
 const PUBLIC = PUBLIC_BUILD || new URLSearchParams(location.search).get('public')==='1';
-function applyPublicMode(){ if(PUBLIC) document.body.classList.add('public'); }
+function applyPublicMode(){ if(!PUBLIC) return; document.body.classList.add('public'); document.querySelectorAll('[onclick*="exportCSV"]').forEach(el=>el.remove()); }
 function applyUrlFilter(){ const s=new URLSearchParams(location.search).get('sistema'); if(s&&typeof setSys==='function') setSys(s); }
 renderKpis(); fillFilters(); renderDir();
 applyPublicMode(); applyUrlFilter();

@@ -35,6 +35,23 @@ function doPost(e) {
     }
     var p = (e && e.parameter) || {};
     var now = new Date();
+    // ── Sugerencias de los visitantes → hoja SUGERENCIAS ──
+    if (p.tipo === 'sugerencia') {
+      var sg = ss.getSheetByName('SUGERENCIAS') || ss.insertSheet('SUGERENCIAS');
+      if (sg.getLastRow() === 0) {
+        sg.appendRow(['Fecha', 'Hora', 'Nombre', 'Sugerencia', 'Origen']);
+        sg.setFrozenRows(1);
+      }
+      sg.appendRow([
+        Utilities.formatDate(now, TZ, 'yyyy-MM-dd'),
+        Utilities.formatDate(now, TZ, 'HH:mm:ss'),
+        String(p.nombre || '').slice(0, 60),
+        String(p.sugerencia || '').slice(0, 1500),
+        String(p.origen || '').slice(0, 40)
+      ]);
+      return ContentService.createTextOutput('ok');
+    }
+
     sh.appendRow([
       Utilities.formatDate(now, TZ, 'yyyy-MM-dd'),
       Utilities.formatDate(now, TZ, 'HH:mm:ss'),

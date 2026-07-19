@@ -86,7 +86,7 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
       <div class="pcard-foot"><span class="pcard-name">PAPS</span><span class="pcard-arrow">&#8594;</span></div>
     </a>
     <a class="pcard" href="3.QuiroBox.html" title="QuiroBox — Equipamiento de pabellones quirúrgicos">
-      <div class="pcard-icon" style="background:linear-gradient(135deg,#1d4ed8 0%,#1e3a8a 100%)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+      <img class="pcard-img" src="assets/hub_4.jpg" alt="QuiroBox">
       <div class="pcard-foot"><span class="pcard-name">QuiroBox · Pabellones</span><span class="pcard-arrow">&#8594;</span></div>
     </a>
     <a class="pcard" href="25.CorreoNeumatico.html" title="Correo Neumático — sistema de transporte por tubos">
@@ -199,5 +199,47 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
 }
 </script>
 <script src="metrics.js"></script>
+
+<!-- ═══════ 💡 Sugerencias ═══════ -->
+<button onclick="sgAbrir()" style="position:fixed;bottom:18px;right:18px;z-index:9000;background:#1D2D5B;color:#fff;border:1px solid rgba(41,170,226,.5);border-radius:999px;padding:11px 18px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.3);font-family:inherit">💡 Sugerencias</button>
+<div id="sg-ov" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(6,12,26,.74);z-index:9600;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#0f1e34;border:1px solid #29AAE2;border-radius:16px;max-width:480px;width:94%;box-shadow:0 24px 70px rgba(0,0,0,.6);overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between">
+      <strong style="color:#e8f4fd;font-size:15px">💡 Deja tu sugerencia</strong>
+      <button onclick="document.getElementById('sg-ov').style.display='none'" style="background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;line-height:1">×</button>
+    </div>
+    <div style="padding:18px 20px">
+      <label style="display:block;font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Tu nombre</label>
+      <input id="sg-nombre" maxlength="60" style="width:100%;background:#0c1a2e;border:1px solid #334155;border-radius:9px;color:#e8f4fd;padding:10px 12px;font-size:14px;margin-bottom:12px;font-family:inherit">
+      <label style="display:block;font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Sugerencia</label>
+      <textarea id="sg-texto" rows="4" maxlength="1500" placeholder="¿Qué mejorarías o agregarías a estas plataformas?" style="width:100%;background:#0c1a2e;border:1px solid #334155;border-radius:9px;color:#e8f4fd;padding:10px 12px;font-size:14px;font-family:inherit;resize:vertical"></textarea>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:14px">
+        <button id="sg-btn" onclick="sgEnviar()" style="background:#29AAE2;border:none;color:#062033;border-radius:9px;padding:11px 20px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit">Enviar</button>
+        <span id="sg-msg" style="font-size:13px;color:#4ade80;font-weight:600"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function sgAbrir(){
+  document.getElementById('sg-msg').textContent='';
+  var n=document.getElementById('sg-nombre'); if(!n.value) n.value='';
+  document.getElementById('sg-ov').style.display='flex';
+}
+function sgEnviar(){
+  var nombre=document.getElementById('sg-nombre').value.trim();
+  var texto=document.getElementById('sg-texto').value.trim();
+  var msg=document.getElementById('sg-msg');
+  if(!nombre||texto.length<5){ msg.style.color='#fca5a5'; msg.textContent='Falta tu nombre o la sugerencia.'; return; }
+  var btn=document.getElementById('sg-btn'); btn.disabled=true;
+  var body=new URLSearchParams({tipo:'sugerencia', nombre:nombre, sugerencia:texto, origen:'hub-publico'}).toString();
+  fetch('https://script.google.com/macros/s/AKfycbxw6n_702jMlCGYBC6pZ6irM1PlZnj_R9WBH6YnODl3w-3NVQM2rU1o23Ql856oAawf/exec', {method:'POST', mode:'no-cors', keepalive:true, headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:body})
+    .catch(function(){}).finally(function(){
+      btn.disabled=false; msg.style.color='#4ade80'; msg.textContent='¡Gracias! Sugerencia enviada.';
+      document.getElementById('sg-texto').value='';
+      setTimeout(function(){document.getElementById('sg-ov').style.display='none';},1600);
+    });
+}
+</script>
 </body>
 </html>

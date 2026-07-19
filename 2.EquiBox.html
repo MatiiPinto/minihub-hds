@@ -1868,6 +1868,10 @@ function applyPublicMode(){
   // Edición de EquiBox = pestaña Revisión (validación interna) + link Directorio.
   document.querySelectorAll('[data-dim="revision"]').forEach(el=>el.remove());
   document.querySelectorAll('a[href="equibox_directorio.html"]').forEach(a=>a.remove());
+  // sin descargas en modo público (la Vista Excel queda solo visual).
+  // El overlay vive DESPUÉS de este script en el DOM → diferir al DOMContentLoaded.
+  const _rmExcel=()=>document.querySelectorAll('.excel-actions').forEach(el=>el.remove());
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',_rmExcel); else _rmExcel();
   if(activeDim==='revision'){ const c=document.querySelector('[data-dim="categoria"]'); if(c) setDim('categoria',c); }
 }
 // ── FILTRO POR URL · compartir el HUB acotado a un servicio/especialidad ─────
