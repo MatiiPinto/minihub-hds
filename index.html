@@ -44,6 +44,11 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
 .inst-card p{font-size:.78rem;line-height:1.65;color:#475569;margin:0;text-align:justify;}
 .inst-card strong{color:#1D2D5B;font-weight:600;}
 .inst-note{font-size:.7rem;color:#94a3b8;text-align:center;margin:18px 0 0;letter-spacing:.02em;}
+/* ── Placas conmemorativas laterales ── */
+.placa{position:fixed;top:calc(50% + 20px);transform:translateY(-50%);height:88vh;max-height:1000px;width:auto;z-index:1;pointer-events:none;filter:drop-shadow(0 8px 22px rgba(29,45,91,.22));}
+.placa-l{right:calc(50% + 508px);}
+.placa-r{left:calc(50% + 508px);}
+@media(max-width:1480px){.placa{display:none;}}
 @media(max-width:600px){
   header{padding:8px 14px;height:auto;min-height:56px;gap:10px;}
   .header-left{gap:10px;min-width:0;}
@@ -107,22 +112,13 @@ footer{background:var(--navy2);border-top:1px solid rgba(255,255,255,.07);paddin
     </a>
   </div>
 
-  <!-- ── Misión / Visión · Cuenta Pública Participativa Gestión 2025 ── -->
-  <section class="inst">
-    <div class="section-label">Hospital del Salvador · desde 1871</div>
-    <div class="inst-grid">
-      <div class="inst-card">
-        <div class="inst-k">Misión</div>
-        <p>El Hospital del Salvador <strong>es un centro de excelencia en salud y docente</strong>, que combina <strong>atención humana, gestión estratégica e innovación científica</strong> para resolver las necesidades sanitarias de manera equitativa, eficiente y sostenible, formando profesionales de alto rendimiento, generando conocimiento de impacto nacional y contribuyendo a la transformación del sistema de salud chileno hacia una medicina más inclusiva y resiliente.</p>
-      </div>
-      <div class="inst-card">
-        <div class="inst-k">Visión</div>
-        <p>Ser un hospital gentil, eficiente y de excelencia organizacional, <strong>reconocido por ofrecer una experiencia de salud segura, personalizada y oportuna</strong>.</p>
-      </div>
-    </div>
-    <p class="inst-note">Institución asistencial docente que atiende a más de 750.000 personas.</p>
-  </section>
+  <!-- (Misión/Visión retiradas: el texto ya vive en las placas de mármol laterales;
+        se deja visible la silueta del hospital de fondo) -->
 </main>
+
+<!-- ── Placas conmemorativas de mármol · flanquean el HUB (pantallas anchas) ── -->
+<img class="placa placa-l" src="placa-izq.jpg" alt="Placa conmemorativa · Bienhechores y Subdirectores del Hospital del Salvador">
+<img class="placa placa-r" src="placa-der.jpg" alt="Placa conmemorativa · Administradores y Directores del Hospital del Salvador">
 <footer>
   <span>Hospital del Salvador · Ingeniería Biomédica Hospitalaria</span>
   <span>INGER-HDS</span>
